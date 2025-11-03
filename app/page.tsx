@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useMemo, useState } from "react";
 import ContactSection from "./components/ContactSection";
 type StorageItem = { Model: string; Size_GB: number; Type: string; BusType: string };
@@ -60,9 +61,27 @@ export default function BuyerPage() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return listings;
-    return listings.filter(l =>
-      [l.Brand, l.Model, l.CPU, l.GPU, l.OS].some(v => (v || "").toLowerCase().includes(q))
-    );
+    return listings.filter((l) => {
+      const haystack = [
+        l.Brand,
+        l.Model,
+        l.CPU,
+        l.GPU,
+        l.OS,
+        l.RAM_GB,
+        l.RAM_Type,
+        l.RAM_Speed_MHz,
+        l.Display_Resolution,
+        String(l.Screen_Size_inch || ""),
+        l.description,
+        prettyStorage(l.Storage),
+        ...(l.Storage || []).flatMap((s) => [s.Model, String(s.Size_GB || ""), s.Type, s.BusType]),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(q);
+    });
   }, [query, listings]);
 
   return (
@@ -70,18 +89,29 @@ export default function BuyerPage() {
     <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
       <div className="mb-6">
         <div className="mb-4 sm:mb-0 sm:flex sm:items-end sm:justify-between sm:gap-4">
-          <div className="mb-4 sm:mb-0">
-            <h1 className="text-2xl font-semibold text-gray-900 sm:text-3xl">Available PCs</h1>
-            <p className="text-sm text-zinc-500 mt-1">Browse published listings and request to buy</p>
+          <div className="mb-4 sm:mb-0 flex flex-col justify-center align-bottom text-center">
+            <h1 className="text-2xl font-semibold font-mono">Available Computers</h1>
+            <p className="text-sm text-gray-600 italic mt-1">Browse available computers and request to buy</p>
           </div>
-          <div className="w-full sm:w-auto">
-            <input
-              placeholder="Search brand, model, CPU..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-full sm:w-72 rounded-md border border-gray-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
+     <div className="w-full sm:w-auto">
+  <div className="relative">
+    <input
+      placeholder="Search brand, model, CPU, RAM, storage..."
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      className="w-full sm:w-64 px-4 py-2.5 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 transition-colors placeholder-gray-400"
+    />
+    <svg 
+      className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
+      fill="none" 
+      stroke="currentColor" 
+      viewBox="0 0 24 24"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+  </div>
+</div>
+
         </div>
       </div>
 
@@ -106,15 +136,15 @@ export default function BuyerPage() {
             <a
               key={l.id}
               href={`/listings/${l.id}`}
-              className="block rounded-xl border border-gray-200 bg-white p-4 sm:p-5 hover:shadow-lg hover:border-blue-300 transition-all duration-200 active:scale-[0.99]"
+              className="block rounded-xl border border-gray-200 bg-white p-4 sm:p-5 hover:shadow-md hover:border-gray-300 transition-all duration-200 active:scale-[0.99]"
             >
                  <div className="mb-3 flex items-start justify-between gap-2">
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs font-medium text-blue-600 truncate">{l.Brand}</div>
+                  <div className="text-xs font-medium text-gray-500 truncate">{l.Brand}</div>
                   <div className="text-base font-bold text-gray-900 line-clamp-2 leading-tight">{l.Model}</div>
                 </div>
                 <div className="flex-shrink-0 text-right">
-                  <div className="text-lg font-bold text-blue-600 whitespace-nowrap">${l.price?.toLocaleString()}</div>
+                  <div className="text-lg font-semibold text-gray-900 whitespace-nowrap">{l.price?.toLocaleString()} ETB</div>
                 </div>
               </div>
               {l.imageUrl && (
@@ -154,7 +184,7 @@ export default function BuyerPage() {
                 </div>
               </div>
               <div className="w-full">
-                <div className="rounded-lg bg-blue-600 px-4 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors">
+                <div className="rounded-lg bg-gray-900 px-4 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-gray-800 transition-colors">
                   View Details
                 </div>
               </div>
@@ -178,7 +208,7 @@ export default function BuyerPage() {
         </div>
       )}
     </div>
-    <div id="contactus">
+    <div id="contact">
  <ContactSection />
     </div>
    

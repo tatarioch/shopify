@@ -4,6 +4,7 @@ import { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import ContactSellerForm from '@/app/components/ContactSellerForm';
 
 type Listing = {
   id: string;
@@ -100,6 +101,24 @@ export default function ListingDetail({ params }: { params: Promise<{ id: string
                   No Image Available
                 </div>
               )}
+              {listing.images && listing.images.length > 1 && (
+                <>
+                  <button
+                    aria-label="Previous image"
+                    onClick={() => setSelectedImageIndex((i) => (i - 1 + listing.images.length) % listing.images.length)}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 hover:bg-white text-gray-800 h-9 w-9 grid place-items-center shadow"
+                  >
+                    <span className="text-lg">‹</span>
+                  </button>
+                  <button
+                    aria-label="Next image"
+                    onClick={() => setSelectedImageIndex((i) => (i + 1) % listing.images.length)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 hover:bg-white text-gray-800 h-9 w-9 grid place-items-center shadow"
+                  >
+                    <span className="text-lg">›</span>
+                  </button>
+                </>
+              )}
             </div>
             {listing.images && listing.images.length > 1 && (
               <div className="mt-4 grid grid-cols-4 sm:grid-cols-5 gap-2">
@@ -135,8 +154,8 @@ export default function ListingDetail({ params }: { params: Promise<{ id: string
               {listing.Brand} {listing.Model}
             </h1>
             
-            <div className="text-3xl sm:text-4xl font-bold text-blue-600 mb-6">
-              ${listing.price?.toLocaleString()}
+            <div className="text-3xl sm:text-4xl font-semibold text-gray-900 mb-6">
+              {listing.price?.toLocaleString()} ETB
             </div>
             
             {listing.description && (
@@ -183,9 +202,7 @@ export default function ListingDetail({ params }: { params: Promise<{ id: string
               </div>
             </div>
             
-            <button className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg font-semibold text-base hover:bg-blue-700 active:bg-blue-800 transition-colors shadow-lg hover:shadow-xl">
-              Contact Seller
-            </button>
+            <ContactSellerForm listing={listing} />
           </div>
         </div>
       </div>
