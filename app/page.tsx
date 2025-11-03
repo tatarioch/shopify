@@ -91,24 +91,16 @@ export default function BuyerPage() {
         <div className="mb-4 sm:mb-0 sm:flex sm:items-end sm:justify-between sm:gap-4">
           <div className="mb-4 sm:mb-0 flex flex-col justify-center align-bottom text-center">
             <h1 className="text-2xl font-semibold font-mono">Available Computers</h1>
-            <p className="text-sm text-gray-600 italic mt-1">Browse available computers and request to buy</p>
           </div>
      <div className="w-full sm:w-auto">
   <div className="relative">
     <input
-      placeholder="Search brand, model, CPU, RAM, storage..."
+      placeholder="Search brand, model, CPU, RAM ..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
       className="w-full sm:w-64 px-4 py-2.5 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 transition-colors placeholder-gray-400"
     />
-    <svg 
-      className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
-      fill="none" 
-      stroke="currentColor" 
-      viewBox="0 0 24 24"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-    </svg>
+    
   </div>
 </div>
 
@@ -131,24 +123,24 @@ export default function BuyerPage() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid  grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((l) => (
             <a
               key={l.id}
               href={`/listings/${l.id}`}
-              className="block rounded-xl border border-gray-200 bg-white p-4 sm:p-5 hover:shadow-md hover:border-gray-300 transition-all duration-200 active:scale-[0.99]"
+              className="block rounded-xl border border-blue-300 bg-gray-50 p-4 sm:p-5 hover:shadow-md hover:border-gray-300 transition-all duration-200 active:scale-[0.99]"
             >
                  <div className="mb-3 flex items-start justify-between gap-2">
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs font-medium text-gray-500 truncate">{l.Brand}</div>
-                  <div className="text-base font-bold text-gray-900 line-clamp-2 leading-tight">{l.Model}</div>
+                  <div className="text-xs font-bold text-gray-900">{l.Brand}</div>
+                  <div className="text-base font-semibold italic  text-stone-800 line-clamp-2 leading-tight">{l.Model}</div>
                 </div>
                 <div className="flex-shrink-0 text-right">
-                  <div className="text-lg font-semibold text-gray-900 whitespace-nowrap">{l.price?.toLocaleString()} ETB</div>
+                  <div className="text-lg font-semibold text-blue-900 mt-2">{l.price?.toLocaleString()} ETB</div>
                 </div>
               </div>
               {l.imageUrl && (
-                <div className="relative h-40 sm:h-48 w-full mb-3 overflow-hidden rounded-lg bg-gray-100">
+                <div className="relative h-40 sm:h-48 w-full mb-3 overflow-hidden rounded-xl bg-gray-100">
                   <img
                     src={l.images?.[0]}
                     alt={`${l.Brand} ${l.Model}`}
@@ -165,18 +157,18 @@ export default function BuyerPage() {
                   {l.description}
                 </div>
               )}
-              <div className="mb-4 space-y-1.5 text-xs text-gray-700">
+              <div className="mb-4 space-y-1.5 text-xs text-gray-800">
                 <div className="flex items-start">
-                  <span className="text-gray-500 min-w-[60px]">CPU:</span>
+                  <span className="text-black font-medium min-w-[60px] ">CPU:</span>
                   <span className="flex-1 line-clamp-1">{l.CPU}</span>
                 </div>
                 <div className="flex items-start">
-                  <span className="text-gray-500 min-w-[60px]">RAM:</span>
+                  <span className="text-black font-medium min-w-[60px]">RAM:</span>
                   <span className="flex-1">{l.RAM_GB}GB {l.RAM_Type}</span>
                 </div>
                 <div className="flex items-start">
-                  <span className="text-gray-500 min-w-[60px]">GPU:</span>
-                  <span className="flex-1 line-clamp-1">{l.GPU}</span>
+                  <span className="text-black font-medium min-w-[60px]">GPU:</span>
+                  <span className="flex-1 line-clamp-1 font-sans">{l.GPU}</span>
                 </div>
                 <div className="hidden sm:flex items-start">
                   <span className="text-gray-500 min-w-[60px]">Storage:</span>
@@ -184,7 +176,7 @@ export default function BuyerPage() {
                 </div>
               </div>
               <div className="w-full">
-                <div className="rounded-lg bg-gray-900 px-4 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-gray-800 transition-colors">
+                <div className="rounded-lg bg-stone-600 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-gray-800 transition-colors">
                   View Details
                 </div>
               </div>
