@@ -13,6 +13,7 @@ type Listing = {
   RAM_Speed_MHz: string;
   Storage: StorageItem[];
   GPU: string;
+  battery:string;
   Display_Resolution: string;
   Screen_Size_inch: number;
   OS: string;
@@ -155,11 +156,7 @@ export default function BuyerPage() {
               )}
              
               <div className="mb-4 space-y-1.5 text-xs text-gray-800">
-                <div className="flex items-start">
-                  <span className="text-black font-medium min-w-[60px] ">CPU:</span>
-                  <span className="flex-1 line-clamp-1">{l.CPU}</span>
-                  
-                </div>
+                
                  <div className="flex items-start">
                   <span className="text-black font-medium min-w-[60px] ">CPU:</span>
                   <span className="flex-1 line-clamp-1">{l.CPU}</span>
@@ -174,8 +171,12 @@ export default function BuyerPage() {
                   <span className="flex-1 line-clamp-1 font-sans">{l.GPU}</span>
                 </div>
                 <div className="hidden sm:flex items-start">
-                  <span className="text-gray-500 min-w-[60px]">Storage:</span>
+                  <span className="text-black font-medium min-w-[60px]">Storage:</span>
                   <span className="flex-1 line-clamp-1">{prettyStorage(l.Storage)}</span>
+                </div>
+                <div className="hidden sm:flex items-start">
+                  <span className="text-black font-medium min-w-[60px]">Battery:</span>
+                  <span className="flex-1 line-clamp-1">{(l.battery)} hrs</span>
                 </div>
                  {l.negotiable && (
                 <div className="mb-3 text-xs text-gray-600 line-clamp-2 leading-relaxed">
