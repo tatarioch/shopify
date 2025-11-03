@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import ContactSection from "./components/ContactSection";
 
 type StorageItem = { Model: string; Size_GB: number; Type: string; BusType: string };
 
@@ -68,6 +69,7 @@ export default function BuyerPage() {
   }, [query, listings]);
 
   return (
+    <>
     <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
       <div className="mb-6">
         <div className="mb-4 sm:mb-0 sm:flex sm:items-end sm:justify-between sm:gap-4">
@@ -186,5 +188,7 @@ export default function BuyerPage() {
         </div>
       )}
     </div>
+    <ContactSection />
+    </>
   );
 }
