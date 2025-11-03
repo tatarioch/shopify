@@ -188,7 +188,10 @@ export default function BuyerPage() {
         </div>
       )}
     </div>
-    <ContactSection />
+    <div id="contactus">
+ <ContactSection />
+    </div>
+   
     </>
   );
 }
