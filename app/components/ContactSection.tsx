@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLocation} from "@fortawesome/free-solid-svg-icons";
 type SocialLink = {
   name: string;
   username: string;
@@ -12,8 +13,36 @@ type SocialLink = {
 export default function Footer() {
   const year = new Date().getFullYear();
   const [isEditing, setIsEditing] = useState(false);
+const handleSeeRoute = () => {
+    const destLat = 8.998964123447454;
+  
+    const destLng =38.78718387232911;
+        const fallbackUrl = `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}&travelmode=driving`;
 
-  // ✅ Updated links with usernames and real profile URLs
+    if (!navigator.geolocation) {
+      window.open(fallbackUrl, "_blank");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLat = position.coords.latitude;
+        const userLng = position.coords.longitude;
+        const mapUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${destLat},${destLng}&travelmode=driving`;
+        
+        window.open(mapUrl, "_blank");
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        window.open(fallbackUrl, "_blank");
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      }
+    );
+  };
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([
     {
       name: "Telegram",
@@ -67,6 +96,15 @@ export default function Footer() {
           </p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+          <button
+              onClick={() => {
+                handleSeeRoute();
+              }}
+              className="text-sm font-medium bg-slate-800/30 cursor-pointer rounded-2xl p-4 text-center border border-slate-700/50 transition-all duration-300 hover:bg-slate-700/50 hover:scale-105 hover:shadow-lg hover:text-slate-300 text-slate-300 group-hover:text-white transition-colors "
+            >
+              <p className=" text-xl text-slate-300 group-hover:scale-110 transition-transform duration-300"><FontAwesomeIcon icon={faLocation} className="p-4 bg-gray-800 rounded-2xl" /></p>
+              Bole alemnesh plaza
+            </button>
           {socialLinks.map((link, index) => (
             <a
               key={index}
@@ -84,7 +122,6 @@ export default function Footer() {
                 <span className="text-sm font-medium text-slate-300 group-hover:text-white transition-colors duration-300">
                   {link.name}
                 </span>
-                {/* 👇 Username or handle */}
                 <span className="text-xs text-slate-400 group-hover:text-slate-200 transition">
                   {link.username}
                 </span>

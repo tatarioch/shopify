@@ -70,11 +70,9 @@ export default function ListingDetail({ params }: { params: Promise<{ id: string
         const userLat = position.coords.latitude;
         const userLng = position.coords.longitude;
         const mapUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${destLat},${destLng}&travelmode=driving`;
-        
         window.open(mapUrl, "_blank");
       },
       (error) => {
-        console.error("Geolocation error:", error);
         window.open(fallbackUrl, "_blank");
       },
       {
@@ -229,7 +227,7 @@ export default function ListingDetail({ params }: { params: Promise<{ id: string
               className=" bg-sky-600 px-4 py-3 rounded-lg text-black cursor-pointer text-center hover:text-white font-medium"
             >
               <FontAwesomeIcon icon={faRoute} className="w-4 h-4" />
-              See Route
+              See Our Address
             </button>
               </div>
             </div>
