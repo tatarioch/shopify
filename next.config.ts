@@ -5,7 +5,6 @@ import withPWA from "next-pwa";
 /** @type {NextConfig} */
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // ❌ Removed turbopack config — it causes build errors with next-pwa
   images: {
     remotePatterns: [
       {
@@ -17,12 +16,12 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPWA({
-  ...nextConfig,
-  pwa: {
-    dest: "public",
-    register: true,
-    skipWaiting: true,
-    disable: process.env.NODE_ENV === "development", // disable PWA in dev
-  },
+// Wrap with PWA only once, and keep nextConfig clean
+const withPWAFunc = withPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === "development",
 });
+
+export default withPWAFunc(nextConfig);
