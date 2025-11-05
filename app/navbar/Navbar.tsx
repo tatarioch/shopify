@@ -5,12 +5,14 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone, faBars, faXmark, faRoute } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
 
   // Add shadow on scroll
   useEffect(() => {
@@ -68,6 +70,11 @@ export default function Navbar() {
   };
 
   return (
+    <>
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500 via-blue-500 to-fuchsia-500 origin-left z-[60]"
+        style={{ scaleX }}
+      />
     <nav
       className={`fixed top-0 inset-x-0 z-50 border-b border-gray-200 transition-all duration-300 ${
         scrolled ? "bg-white/90 shadow-md backdrop-blur" : "bg-white/70 backdrop-blur"
@@ -82,31 +89,44 @@ export default function Navbar() {
             height={40}
             className="object-contain"
           />
-          <motion.span
-            className="text-lg sm:text-xl font-bold text-blue-600 tracking-tight"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            Royal Computer
-          </motion.span>
+          <div className="relative flex items-center">
+            <motion.span
+              className="text-lg sm:text-xl font-bold text-blue-600 tracking-tight"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              whileHover={{ scale: 1.02 }}
+            >
+              Royal Computer
+            </motion.span>
+          </div>
         </Link>
         <div className="hidden md:flex items-center gap-8">
-          <a
+          <motion.a
             href="#contact"
-            className="flex items-center gap-2 text-gray-800 hover:text-blue-600 font-medium transition"
+            className="relative flex items-center gap-2 text-gray-800 hover:text-blue-600 font-medium"
+            whileHover={{ y: -1 }}
+            whileTap={{ scale: 0.98 }}
           >
             <FontAwesomeIcon icon={faPhone} className="w-4 h-4" />
             Contact
-          </a>
+            <motion.span
+              className="absolute -bottom-1 left-0 right-0 h-[2px] bg-blue-600"
+              initial={{ scaleX: 0 }}
+              whileHover={{ scaleX: 1 }}
+              style={{ originX: 0 }}
+            />
+          </motion.a>
 
-          <button
+          <motion.button
             onClick={handleSeeRoute}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow"
+            whileHover={{ y: -1 }}
+            whileTap={{ scale: 0.98 }}
           >
             <FontAwesomeIcon icon={faRoute} className="w-4 h-4" />
             See Route
-          </button>
+          </motion.button>
         </div>
 
         <button
@@ -116,34 +136,41 @@ export default function Navbar() {
           <FontAwesomeIcon icon={isOpen ? faXmark : faBars} className="w-6 h-6" />
         </button>
       </div>
-      {isOpen && (
-        <div
-          ref={menuRef}
-          className="absolute right-0 border-t-gray-200 border-t-2 w-[60%] bg-white shadow-lg md:hidden"
-        >
-          <div className="px-6 py-5 flex flex-col space-y-4">
-            <a
-              href="#contact"
-              className="flex items-center gap-3 text-gray-800 hover:text-blue-600 font-medium"
-              onClick={() => setIsOpen(false)}
-            >
-              <FontAwesomeIcon icon={faPhone} className="w-4 h-4" />
-              Contact
-            </a>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            ref={menuRef}
+            className="absolute right-0 border-t-gray-200 border-t-2 w-[60%] bg-white shadow-lg md:hidden"
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.18 }}
+          >
+            <div className="px-6 py-5 flex flex-col space-y-4">
+              <a
+                href="#contact"
+                className="flex items-center gap-3 text-gray-800 hover:text-blue-600 font-medium"
+                onClick={() => setIsOpen(false)}
+              >
+                <FontAwesomeIcon icon={faPhone} className="w-4 h-4" />
+                Contact
+              </a>
 
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                handleSeeRoute();
-              }}
-              className="flex items-center gap-3 text-gray-800 hover:text-blue-600 font-medium"
-            >
-              <FontAwesomeIcon icon={faRoute} className="w-4 h-4" />
-              See Route
-            </button>
-          </div>
-        </div>
-      )}
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  handleSeeRoute();
+                }}
+                className="flex items-center gap-3 text-gray-800 hover:text-blue-600 font-medium"
+              >
+                <FontAwesomeIcon icon={faRoute} className="w-4 h-4" />
+                See Route
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
+  </>
   );
 }
